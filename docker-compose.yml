@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  webApp:
+    image: webapp
+    build:
+      context: .
+      dockerfile: SampleSonicSearch.Mvc/Dockerfile
+    depends_on:
+      - sqlServer
+      - sonic
+
+  sqlServer:
+    image: mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04
+    environment: 
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: TestPass@12345
+    ports:
+      - 1433:1433
+
+  sonic:
+    image: valeriansaliou/sonic:v1.4.0
+    ports:
+      - 1491:1491
+    volumes:
+      - C:\projects\SampleSonicSearch\sonic\sonic.cfg:/etc/sonic.cfg
+      - C:\projects\SampleSonicSearch\sonic\store\:/var/lib/sonic/store/

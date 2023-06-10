@@ -1,0 +1,72 @@
+﻿@model IEnumerable<CarViewModel>
+@{
+  ViewData["Title"] = "Cars";
+}
+<link rel="stylesheet" href="~/css/autocomplete-input.css" />
+<h1>Cars</h1>
+<div class="row">
+  <div class="col-4">
+    <a asp-action="Create" class="btn btn-primary">New Car</a>
+    <a asp-action="LoadDatabase" class="btn btn-secondary">Load database</a>
+  </div>
+  <div class="col-8 mb-3">
+    <form autocomplete="off">
+      <div class="input-group">
+        <input type="text" class="form-control" id="query" name="query"
+               placeholder="Search for model or brand name of car" autocomplete="off">
+        <button type="button" class="btn btn-secondary">Search</button>
+      </div>
+    </form>
+    <div id="searchResult"></div>
+  </div>
+</div>
+
+<table class="table table bordered">
+  <thead>
+    <tr>
+      <td>Model</td>
+      <td>Brand</td>
+      <td>Options</td>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var car in Model)
+    {
+      <tr>
+        <td>@car.Model</td>
+        <td>@car.Brand</td>
+        <td>
+          <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-info btn-sm">Edit</a>
+          <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<input type="hidden" id="suggestionServiceUrl" value="@Url.Action("Suggestion")" />
+@section Scripts{
+  <script src="~/js/autocomplete-input.js"></script>
+  <script>
+    const inputSearch = document.getElementById("query");
+    const divEl = document.getElementById('searchResult');
+    async function search(term) {
+      const response = await fetch(`@Url.Action("Search")?term=${term}`);
+      if (response.status !== 200) return [];
+
+      return await response.json();
+    }
+
+    inputSearch.addEventListener('input', async (e) => {
+      const result = await search(e.target.value);
+      if (result.length === 0) {
+          divEl.innerHTML = 'None result found!';
+      } else {
+          divEl.innerHTML = '<ul>'
+          result.forEach((car) => { divEl.innerHTML += `<li>${car}</li>`});
+          divEl.innerHTML += '</ul>';
+      }
+    });
+
+    autocomplete(inputSearch, document.getElementById('suggestionServiceUrl').value);
+  </script>
+}
