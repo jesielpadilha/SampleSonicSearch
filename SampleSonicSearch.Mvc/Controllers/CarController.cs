@@ -130,7 +130,7 @@ namespace SampleSonicSearch.Mvc.Controllers
     {
       if (string.IsNullOrWhiteSpace(term)) return Ok(Enumerable.Empty<string>());
 
-      var suggestions = await _sonicService.SugestAsync(SONIC_COLLECTION, SONIC_BUCKET, term);
+      var suggestions = await _sonicService.SuggestAsync(SONIC_COLLECTION, SONIC_BUCKET, term);
       if (!suggestions.Any()) return Ok(Enumerable.Empty<string>());
 
       return Ok(suggestions.ToList());

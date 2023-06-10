@@ -36,7 +36,7 @@
     /// <param name="bucket">It's a subcollection inside the collection</param>
     /// <param name="term"></param>
     /// <returns>List of found items</returns>
-    Task<string[]> SugestAsync(string collection, string bucket, string term);
+    Task<string[]> SuggestAsync(string collection, string bucket, string term);
 
     /// <summary>
     /// Delete collection

@@ -1,8 +1,52 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<link rel="stylesheet" href="~/css/autocomplete-input.css" />
+<div>
+  <h1 class="display-4 text-center">Welcome</h1>
+  <h4 class="text-center">Find your fivorite car</h4>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-8 mt-3">
+      <form autocomplete="off">
+        <div class="input-group">
+          <input type="text" class="form-control" id="query" name="query"
+                 placeholder="Search for model or brand name of car" autocomplete="off">
+          <button type="button" class="btn btn-secondary">Search</button>
+        </div>
+      </form>
+      <div id="searchResult"></div>
+    </div>
+    <div class="col"></div>
+  </div>
 </div>
+
+<input type="hidden" id="suggestionServiceUrl" value="@Url.Action("Suggestion", "Car")" />
+<input type="hidden" id="searchServiceUrl" value="@Url.Action("Search", "Car")" />
+@section Scripts{
+  <script src="~/js/autocomplete-input.js"></script>
+  <script>
+    const inputSearch = document.getElementById("query");
+    const searchServiceUrl = document.getElementById("searchServiceUrl").value;
+    const divEl = document.getElementById('searchResult');
+    async function search(term) {
+        const response = await fetch(`${searchServiceUrl}?term=${term}`);
+        if (response.status !== 200) return [];
+
+        return await response.json();
+    }
+
+    inputSearch.addEventListener('input', async (e) => {
+        const result = await search(e.target.value);
+        if (result.length === 0) {
+            divEl.innerHTML = 'None result found!';
+        } else {
+            divEl.innerHTML = '<ul>'
+            result.forEach((car) => { divEl.innerHTML += `<li>${car}</li>` });
+            divEl.innerHTML += '</ul>';
+        }
+    });
+
+    autocomplete(inputSearch, document.getElementById('suggestionServiceUrl').value);
+  </script>
+}

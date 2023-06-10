@@ -44,7 +44,7 @@ namespace SampleSonicSearch.Mvc.Models.Sonic
       return items.Where(item => !string.IsNullOrWhiteSpace(item)).ToArray();
     }
 
-    public async Task<string[]> SugestAsync(string collection, string bucket, string term)
+    public async Task<string[]> SuggestAsync(string collection, string bucket, string term)
     {
       await _searchConnection.ConnectAsync();
       var items = await _searchConnection.SuggestAsync(collection, bucket, term, 5);
