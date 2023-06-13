@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <None Include="cars-database.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

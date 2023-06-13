@@ -6,9 +6,14 @@ services:
     build:
       context: .
       dockerfile: SampleSonicSearch.Mvc/Dockerfile
+    ports:
+     - 3000:80
     depends_on:
       - sqlServer
       - sonic
+    environment:
+      ConnectionStrings__Database: "Server=sqlServer; Database=SampleSonicDb; User Id=sa; Password=TestPass@12345"
+      SonicSetting__Hostname: sonic
 
   sqlServer:
     image: mcr.microsoft.com/mssql/server:2019-CU14-ubuntu-20.04
